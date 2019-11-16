@@ -26,6 +26,10 @@ function barrioChanged() {
   const barrio = data.features[selectEl.value].properties;
   //console.log('changed', barrio);
 
+  // pintamos chart 1
+  document.getElementById('chart1').innerHTML = '';
+  drawChart1('chart1', parseDataChart1(barrio), 600, 400);
+
   // pintamos chart 2
   document.getElementById('chart2').innerHTML = '';
   drawChart2('chart2', parseDataChart2(barrio), 600, 400);

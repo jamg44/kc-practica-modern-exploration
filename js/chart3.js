@@ -9,7 +9,7 @@
 
 const POINTS = 100;
 
-// result: [5,1,15,2]
+// result: [ [5, 1], [15,2] ]
 function parseDataChart3(data) {
   return [...Array(POINTS).keys()].map(_ => [Math.random() * 100, Math.random() * 100]);
 }

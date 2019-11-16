@@ -10,11 +10,12 @@
     <h1>Práctica D3 Javier Miguel</h2>
 
     <div>
-      Elige un barrio: <select id="barrio-select" onchange="barrioChanged()"></select>
+      Barrio: <select id="barrio-select" onchange="barrioChanged()"></select>
     </div>
 
     <h2>Chart 1</h2>
-    <p></p>
+    <p>Crear un mapa con los barrios de la ciudad de Madrid y pintarlos por
+    colores según el precio medio del alquiler en el barrio.</p>
     <div id="chart1"></div>
 
     <h2>Chart 2</h2>
@@ -23,11 +24,15 @@
     <div id="chart2"></div>
 
     <h2>Chart 3</h2>
-    <p>Crear una gráfica que dibuje una regresión lineal de alguna de las características con respecto al precio en un barrio.</p>
+    <p>Crear una gráfica que dibuje una regresión lineal de alguna de las
+      características con respecto al precio en un barrio.</p>
     <div id="chart3"></div>
 
     <script src="js/libs/d3.v5.min.js"></script>
+    <script src="https://unpkg.com/topojson@3"></script>
+
     <script src="js/main.js"></script>
+    <script src="js/chart1.js"></script>
     <script src="js/chart2.js"></script>
     <script src="js/chart3.js"></script>
   </body>
