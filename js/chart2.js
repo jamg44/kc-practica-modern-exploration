@@ -7,16 +7,9 @@
  * y en el eje X el número de habitaciones de un barrio.
  */
 
-const api = 'https://gist.githubusercontent.com/miguepiscy/2d431ec3bc101ef62ff8ddd0e476177f/raw/2482274db871e60195b7196c602700226bdd3a44/practica.json';
-
-// main
-d3.json(api).then(data => {
-  // chart 2
-  drawChart('#chart2', parseChart2(data));
-});
 
 // result: [5,1,15,2]
-function parseChart2(input) {
+function parseDataChart2(input) {
   const propertiesList = input.features[0].properties.properties;
   const data = propertiesList.reduce((prev, curr) => {
     prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
@@ -25,7 +18,7 @@ function parseChart2(input) {
   return data;
 }
 
-function drawChart(el, data) {
+function drawChart2(el, data) {
   const maxProperties = d3.max(data);
   const height = 400;
   const width = 600;
@@ -87,6 +80,5 @@ function drawChart(el, data) {
     const scaleNum = height / maxProperties;
     return scaleNum * d - 20 ;
   }
-
 
 }
