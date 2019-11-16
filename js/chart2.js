@@ -9,23 +9,29 @@
 
 
 // result: [5,1,15,2]
-function parseDataChart2(input) {
-  const propertiesList = input.features[0].properties.properties;
+function parseDataChart2(barrio) {
+  const propertiesList = barrio.properties;
   const data = propertiesList.reduce((prev, curr) => {
     prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
     return prev;
   }, [] );
+  for (let i = 0; i < 5; i++) {
+    if (data[i] == null) data[i] = 0;
+  }
   return data;
 }
 
-function drawChart2(el, data) {
+function drawChart2(elementID, data) {
   const maxProperties = d3.max(data);
   const height = 400;
   const width = 600;
-  const marginLeft = 22;
+  const marginLeft = 0;
   const sizeAxis = 20;
+  const rectWidth = 80;
+  const rectMargin = ((width - (data.length * rectWidth)) / data.length) / 2;
 
-  const svg = d3.select(el)
+  document.getElementById(elementID).innerHTML = '';
+  const svg = d3.select('#' + elementID)
     .append('svg')
     .attr('width', width)
     .attr('height', height);
@@ -36,27 +42,25 @@ function drawChart2(el, data) {
     .range([height, 0]);
 
   const scaleX = d3.scaleLinear()
-    .domain([0, data.length])
+    .domain([0, data.length ])
     .range([marginLeft, width]);
 
+  // pintamos rects
   const rect = svg.selectAll('rect')
     .data(data)
     .enter()
-    .append('rect')
-    .attr('class', d => {
-      if ( d > 10) return 'rectwarning';
-    });
+    .append('rect');
 
-  const rectWidth = 80;
-  const rectMargin = ((width - (data.length * rectWidth)) / data.length) / 2;
   rect
     .attr('x', posX) // sumamos 1 para separarlos
     .attr('y', posY) // le damos la vuelta verticalmente
     .attr('width', rectWidth)
     .attr('height', scale)
+    .attr('class', 'color-blue')
 
+  // pintar un eje x
   const xAxis = d3.axisBottom(scaleX);
-  xAxis.tickValues([0,1, 2, 3, 4]); // https://github.com/d3/d3-axis
+  xAxis.tickValues([0,1,2,3,4]); // https://github.com/d3/d3-axis
   svg.append('g')
     .attr('class', 'axisX')
     .attr('transform', `translate(60, ${height - sizeAxis})`)
@@ -69,7 +73,8 @@ function drawChart2(el, data) {
     .call(d3.axisLeft(scaleY));
 
   function posX(d, i) {
-    return rectMargin + i * (rectWidth + (rectMargin * 2));
+    const result = rectMargin + i * (rectWidth + (rectMargin * 2));
+    return result;
   }
 
   function posY(d) {

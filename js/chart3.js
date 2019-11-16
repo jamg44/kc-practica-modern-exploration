@@ -25,7 +25,7 @@ function parseDataChart3(input) {
 
 }
 
-function drawChart3(el, data) {
+function drawChart3(elementID, data) {
   const xmax = d3.max(data, d => d[0]);
   const xmin = d3.min(data, d => d[0]);
   const ymax = d3.max(data, d => d[1]);
@@ -45,7 +45,8 @@ function drawChart3(el, data) {
     .range([ratio, height - ratio - sizeAxis]); // min y max de marco
 
   // creamos svg
-  const svg = d3.select(el)
+  document.getElementById(elementID).innerHTML = '';
+  const svg = d3.select('#' + elementID)
     .append('svg');
 
   svg
