@@ -31,6 +31,7 @@ function barrioChanged() {
 function pintaBarrio(barrioSelected) {
   const width = 600;
   const height = 400;
+
   // pintamos chart 1
   document.getElementById('chart1').innerHTML = '';
   drawChart1('chart1', width, height, data.features, barrioSelected);
