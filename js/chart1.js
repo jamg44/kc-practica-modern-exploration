@@ -7,93 +7,62 @@
  * según el precio medio del alquiler en el barrio.
  */
 
+function drawChart1(elementID, data, barrioSelected, width, height) {
 
-// result: [5,1,15,2]
-function parseDataChart1(barrio) {
-  const propertiesList = barrio.properties;
-  const data = propertiesList.reduce((prev, curr) => {
-    prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
-    return prev;
-  }, [] );
-  for (let i = 0; i < 5; i++) {
-    if (data[i] == null) data[i] = 0;
-  }
-  return data;
-}
+  //const maxPrice = d3.max(data, d => d.properties.avgprice);
 
-function drawChart1(elementID, data, width, height) {
   const svg = d3.select('#' + elementID)
     .append('svg')
     .attr('width', width)
     .attr('height', height);
 
-  // http://centrodedescargas.cnig.es/CentroDescargas/index.jsp
+  const projection = d3.geoMercator()
+    .scale(height * 130)
+    .center([-3.773521, 40.477007])
+    .translate([width/2, height/2])
+    ;
 
-  // npx live-server (con node)
-  // npm install -g live-server (opcion 2)
-  // live-server (opcion 2)
-  // d3.json(/spain.json)
+  const path = d3.geoPath().projection(projection);
 
-  d3.json('https://gist.githubusercontent.com/miguepiscy/d7385665112660012fdb73cf5ce3299f/raw/a95c33d4dc754294f0746c3682a739c1f030a133/spain.json')
-    .then((spain) => {
-      const projection = d3.geoMercator()
-        .scale(height)
-        .center([-3.703521, 40.417007])
-        .translate([width/2, height/2])
-        ;
+  // const features = topojson
+  //         .feature(spain, spain.objects.subunits)
+  //         .features;
 
-      const path = d3.geoPath().projection(projection);
+  // hasta aquí es comun para todos los mapas
 
-      const featuresSubunits = topojson
-              .feature(spain, spain.objects.subunits)
-              .features;
+  // generamos los nodos path
+  const barrios = svg.selectAll('.barrio')
+    .data(data)
+    .enter()
+    .append('path')
+    .attr('class', 'barrio')
+    .on('click', barrioClicked);
 
-      // hasta aquí es comun para todos los mapas
+  // los pintamos
+  barrios
+    .attr('d', path)
+    .attr('class', d => {
+      // ponemos clase 'barrio-selected' solo al barrio seleccionado
+      if (d.properties.name === barrioSelected.name) {
+        return 'barrio-selected';
+      }
+    })
 
-      // select class => .class ej .subunits
-      // selec id => #id ej #path34
-      // element => elemento ej path o circle o rect
-      const subunits = svg.selectAll('.subunits')
-        .data(featuresSubunits)
-        .enter()
-        .append('path')
-        .attr('class', 'subunits');
+  // ponemos la escala de colores a los barrios en base a avgprice
+  const color = d3.scaleOrdinal(d3.schemeBlues[9]);
+  barrios.attr('fill', (d) => color(d.properties.avgprice));
 
-      subunits
-        // .attr('d', (d) => path(d))
-        .attr('d', path)
-
-      const color = d3.scaleOrdinal(d3.schemeCategory10);
-      subunits.attr('fill', (d) => color(d.properties.POP_EST));
-
-      const featuresPlaces = topojson
-        .feature(spain, spain.objects.places)
-        .features;
-
-      const group  = svg.selectAll('.places')
-        .data(featuresPlaces)
-        .enter()
-        .append('g')
-        .filter(d => {
-          return d.properties.NAME === 'Madrid' ||
-                 d.properties.NAME === 'Badajoz';
-        })
-        .attr('class', (d) => {
-          console.log(d);
-          return 'places'
-        });
-
-      group.attr('transform', (d) => {
-        const translate = projection(d.geometry.coordinates); // cambiamos de lat,lon a x,y
-        return `translate(${translate})`
-      })
-
-      group.append('circle').attr('r', 2);
-
-      group.append('text')
-        .text(d => d.properties.NAME);
-
-
-    });
+  // handler de click en un barrio
+  function barrioClicked(clicked) {
+    let i = 0;
+    while (i <= data.length) {
+      if (data[i].properties.name === clicked.properties.name) break;
+      i++;
+    }
+    // change combobox selected value
+    selectEl.value = i;
+    // repaint all charts for selected barrio
+    pintaBarrio(clicked.properties);
+  }
 
 }

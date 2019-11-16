@@ -10,25 +10,29 @@ d3.json(api).then(dataReaded => {
   // cargamos el selector de barrios
   cargaSelectBarrios(selectEl, data);
   setTimeout(barrioChanged, 0);
+
 });
 
 function cargaSelectBarrios(selectEl, data) {
   data.features
-    .map( (el, i) => el.properties.name+'@'+i)
+    .map((el, i) => el.properties.name+'@'+i)
     .sort()
-    .map( (barrioId, i) => {
+    .map(barrioId => {
       const [name, value] = barrioId.split('@');
-      selectEl.add(new Option(name, value, false, name === 'Chopera'));
+      selectEl.add(new Option(name, value, false, name === 'Palacio'));
     });
 }
 
 function barrioChanged() {
   const barrio = data.features[selectEl.value].properties;
-  //console.log('changed', barrio);
+  pintaBarrio(barrio);
+}
+
+function pintaBarrio(barrio) {
 
   // pintamos chart 1
   document.getElementById('chart1').innerHTML = '';
-  drawChart1('chart1', parseDataChart1(barrio), 600, 400);
+  drawChart1('chart1', data.features, barrio, 600, 400);
 
   // pintamos chart 2
   document.getElementById('chart2').innerHTML = '';

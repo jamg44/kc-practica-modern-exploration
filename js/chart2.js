@@ -15,7 +15,7 @@ function parseDataChart2(barrio) {
     prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
     return prev;
   }, [] );
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 7; i++) {
     if (data[i] == null) data[i] = 0;
   }
   return data;
@@ -23,9 +23,9 @@ function parseDataChart2(barrio) {
 
 function drawChart2(elementID, data, width, height) {
   const maxProperties = d3.max(data);
-  const marginLeft = 0;
+  const marginLeft = 10;
   const sizeAxis = 20;
-  const rectWidth = 80;
+  const rectWidth = 60;
   const rectMargin = ((width - (data.length * rectWidth)) / data.length) / 2;
 
   const svg = d3.select('#' + elementID)
@@ -40,7 +40,7 @@ function drawChart2(elementID, data, width, height) {
 
   const scaleX = d3.scaleLinear()
     .domain([0, data.length ])
-    .range([marginLeft, width]);
+    .range([marginLeft - 15, width]);
 
   // pintamos rects
   const rect = svg.selectAll('rect')
@@ -57,7 +57,11 @@ function drawChart2(elementID, data, width, height) {
 
   // pintar un eje x
   const xAxis = d3.axisBottom(scaleX);
-  xAxis.tickValues([0,1,2,3,4]); // https://github.com/d3/d3-axis
+  xAxis.tickValues([0,1,2,3,4,5,6]); // https://github.com/d3/d3-axis
+  // @Miguel Angel, aquí tengo un problema con el eje x, no se como hacer para que
+  // corresponda con mis barras.
+  // Por ejemplo si pinchas "Casa de Campo" y "Ciudad Universitaria" verás el problema
+  // en las barras.
   svg.append('g')
     .attr('class', 'axisX')
     .attr('transform', `translate(60, ${height - sizeAxis})`)
@@ -70,7 +74,7 @@ function drawChart2(elementID, data, width, height) {
     .call(d3.axisLeft(scaleY));
 
   function posX(d, i) {
-    const result = rectMargin + i * (rectWidth + (rectMargin * 2));
+    const result = marginLeft + rectMargin + i * (rectWidth + (rectMargin * 2));
     return result;
   }
 

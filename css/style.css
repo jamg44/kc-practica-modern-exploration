@@ -2,3 +2,8 @@
   fill: #1d6da9;
   /*stroke: red;*/
 }
+
+.barrio-selected {
+  stroke-width: 3;
+  stroke:red;
+}
