@@ -7,32 +7,19 @@
  * con respecto al precio en un barrio.
  */
 
-// result: [5,1,15,2]
-function parseDataChart3(input) {
-  const propertiesList = input.features[0].properties.properties;
-  const data = propertiesList.reduce((prev, curr) => {
-    prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
-    return prev;
-  }, [] );
-  // return data;
-  return [
-    [5, 20],
-    [480, 90],
-    [25, 50],
-    [100, 33],
-    [330, 95],
-  ];
+const POINTS = 100;
 
+// result: [5,1,15,2]
+function parseDataChart3(data) {
+  return [...Array(POINTS).keys()].map(_ => [Math.random() * 100, Math.random() * 100]);
 }
 
-function drawChart3(elementID, data) {
+function drawChart3(elementID, data, width, height) {
   const xmax = d3.max(data, d => d[0]);
   const xmin = d3.min(data, d => d[0]);
   const ymax = d3.max(data, d => d[1]);
   const ymin = d3.min(data, d => d[1]);
 
-  const height = 500;
-  const width = 500;
   const ratio = 5;
   const sizeAxis = 20;
 
@@ -45,11 +32,8 @@ function drawChart3(elementID, data) {
     .range([ratio, height - ratio - sizeAxis]); // min y max de marco
 
   // creamos svg
-  document.getElementById(elementID).innerHTML = '';
   const svg = d3.select('#' + elementID)
-    .append('svg');
-
-  svg
+    .append('svg')
     .attr('width', width)
     .attr('height', height);
 
@@ -58,50 +42,27 @@ function drawChart3(elementID, data) {
     .data(data)
     .enter()
     .append('g')
-    .attr('class', d => {
-      const r = d[1] / 10;
-      d.push(r);
-      return 'point';
-    });
+    .attr('class', 'color-blue');
 
-
-
+  // cada punto es un grupo
   group.attr('transform', d => {
     const coordx = scaleX(d[0]);
     const coordy = scaleY(d[1]);
     return `translate(${coordx}, ${coordy})`;
   });
 
+  // añadimos a cada grupo un punto
   const circle = group
     .append('circle');
 
   // posicion y tamaño de puntos
   circle
-    .attr('cx', d => 0)
-    .attr('cy', d => 0)
-    .attr('r', (d) => {
-      //debugger;
-      // const r = d[1] / 10;
-      // d.push(r);
-      return d[2];
-    })
-    .attr('class', (d) => {
-      if (d[2] > 5) {
-        return 'rectwarning';
-      }
-    });
+    .attr('cx', 0)
+    .attr('cy', 0)
+    .attr('r', 3);
 
-  group.append('text')
-    .attr('x',  d => {
-      return d[2];
-    })
-    .attr('y', 0)
-    .text(d => d)
-
-  // pintar un eje X
+  // pinto un eje X
   const xAxis = d3.axisBottom(scaleX);
-  //xAxis.tickValues([0,100, 120]); // https://github.com/d3/d3-axis
-
   svg.append('g')
     .attr('class', 'axisX')
     .attr('transform', `translate(0, ${height - sizeAxis})`)

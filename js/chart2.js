@@ -21,16 +21,13 @@ function parseDataChart2(barrio) {
   return data;
 }
 
-function drawChart2(elementID, data) {
+function drawChart2(elementID, data, width, height) {
   const maxProperties = d3.max(data);
-  const height = 400;
-  const width = 600;
   const marginLeft = 0;
   const sizeAxis = 20;
   const rectWidth = 80;
   const rectMargin = ((width - (data.length * rectWidth)) / data.length) / 2;
 
-  document.getElementById(elementID).innerHTML = '';
   const svg = d3.select('#' + elementID)
     .append('svg')
     .attr('width', width)
