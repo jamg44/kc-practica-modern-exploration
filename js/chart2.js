@@ -7,21 +7,23 @@
  * y en el eje X el número de habitaciones de un barrio.
  */
 
+function drawChart2(elementID, width, height, dataSource, barrioSelected) {
 
-// result: [5,1,15,2]
-function parseDataChart2(barrio) {
-  const propertiesList = barrio.properties;
-  const data = propertiesList.reduce((prev, curr) => {
-    prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
-    return prev;
-  }, [] );
-  for (let i = 0; i < 7; i++) {
-    if (data[i] == null) data[i] = 0;
+  // result: [5,1,15,2]
+  function parseData(barrio) {
+    const propertiesList = barrio.properties;
+    const data = propertiesList.reduce((prev, curr) => {
+      prev[curr.bedrooms] = (prev[curr.bedrooms] || 0) + 1;
+      return prev;
+    }, [] );
+    for (let i = 0; i < 7; i++) {
+      if (data[i] == null) data[i] = 0;
+    }
+    return data;
   }
-  return data;
-}
 
-function drawChart2(elementID, data, width, height) {
+  const data = parseData(barrioSelected);
+
   const maxProperties = d3.max(data);
   const marginLeft = 10;
   const sizeAxis = 20;

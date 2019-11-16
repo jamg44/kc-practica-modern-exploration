@@ -9,12 +9,15 @@
 
 const POINTS = 100;
 
-// result: [ [5, 1], [15,2] ]
-function parseDataChart3(data) {
-  return [...Array(POINTS).keys()].map(_ => [Math.random() * 100, Math.random() * 100]);
-}
+function drawChart3(elementID, width, height, dataSource, barrioSelected) {
 
-function drawChart3(elementID, data, width, height) {
+  // result: [ [5, 1], [15,2] ]
+  function parseDataSource(dataSource) {
+    return [...Array(POINTS).keys()].map(_ => [Math.random() * 100, Math.random() * 100]);
+  }
+
+  const data = parseDataSource(dataSource);
+
   const xmax = d3.max(data, d => d[0]);
   const xmin = d3.min(data, d => d[0]);
   const ymax = d3.max(data, d => d[1]);

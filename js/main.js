@@ -8,38 +8,39 @@ let data;
 d3.json(api).then(dataReaded => {
   data = dataReaded;
   // cargamos el selector de barrios
-  cargaSelectBarrios(selectEl, data);
+  cargaSelectBarrios(selectEl, data, 'Aeropuerto');
   setTimeout(barrioChanged, 0);
 
 });
 
-function cargaSelectBarrios(selectEl, data) {
+function cargaSelectBarrios(selectEl, data, selectedName) {
   data.features
     .map((el, i) => el.properties.name+'@'+i)
     .sort()
     .map(barrioId => {
       const [name, value] = barrioId.split('@');
-      selectEl.add(new Option(name, value, false, name === 'Palacio'));
+      selectEl.add(new Option(name, value, false, name === selectedName));
     });
 }
 
 function barrioChanged() {
-  const barrio = data.features[selectEl.value].properties;
-  pintaBarrio(barrio);
+  const barrioSelected = data.features[selectEl.value].properties;
+  pintaBarrio(barrioSelected);
 }
 
-function pintaBarrio(barrio) {
-
+function pintaBarrio(barrioSelected) {
+  const width = 600;
+  const height = 400;
   // pintamos chart 1
   document.getElementById('chart1').innerHTML = '';
-  drawChart1('chart1', data.features, barrio, 600, 400);
+  drawChart1('chart1', width, height, data.features, barrioSelected);
 
   // pintamos chart 2
   document.getElementById('chart2').innerHTML = '';
-  drawChart2('chart2', parseDataChart2(barrio), 600, 400);
+  drawChart2('chart2', width, height, data.features, barrioSelected);
 
   // pintamos chart 3
   document.getElementById('chart3').innerHTML = '';
-  drawChart3('chart3', parseDataChart3(data), 600, 400);
+  drawChart3('chart3', width, height, data.features, barrioSelected);
 
 }

@@ -7,7 +7,7 @@
  * según el precio medio del alquiler en el barrio.
  */
 
-function drawChart1(elementID, data, barrioSelected, width, height) {
+function drawChart1(elementID, width, height, data, barrioSelected) {
 
   //const maxPrice = d3.max(data, d => d.properties.avgprice);
 
